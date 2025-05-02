@@ -23,15 +23,19 @@
     const button = document.getElementById('send-button');
     const chatBox = document.getElementById('chat-box');
 
+    // 发送消息函数
     function sendMessage() {
       const msg = input.value.trim();
       if (msg) {
-        socket.emit('chat message', msg);
-        input.value = '';
+        socket.emit('chat message', msg);  // 向后端发送消息
+        input.value = '';  // 清空输入框
       }
     }
 
+    // 点击发送按钮
     button.addEventListener('click', sendMessage);
+
+    // 支持回车键发送消息
     input.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -39,19 +43,24 @@
       }
     });
 
-    socket.on('chat message', (msg) => {
+    // 接收消息并更新界面
+    socket.on('chat message', msg => {
       const div = document.createElement('div');
       div.className = 'chat-bubble';
-
-      if (msg.id === socket.id) {
-        div.classList.add('sent');
-      } else {
-        div.classList.add('received');
-      }
-
-      div.textContent = msg.text;
+      div.textContent = msg;
       chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
+      chatBox.scrollTop = chatBox.scrollHeight;  // 滚动到最新消息
+    });
+
+    // 接收历史消息并显示
+    socket.on('chat history', (history) => {
+      history.forEach((msg) => {
+        const div = document.createElement('div');
+        div.className = 'chat-bubble';
+        div.textContent = msg;
+        chatBox.appendChild(div);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;  // 滚动到最底部
     });
   </script>
 </body>
