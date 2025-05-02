@@ -5,12 +5,10 @@ const app = express();
 // 提供静态文件
 app.use(express.static(path.join(__dirname, 'public')));
 
-const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 
-const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
