@@ -1,104 +1,129 @@
+/* 基本样式 */
 body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f0f0;
   margin: 0;
-  font-family: 'Helvetica Neue', sans-serif;
-  background: linear-gradient(to right, #dfeeea, #edf7f3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  padding: 0;
 }
 
+/* 聊天框样式 */
 .chat-wrapper {
   width: 100%;
-  max-width: 600px;
-  height: 90vh;
-  background: #ffffffdd;
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 header {
+  font-size: 24px;
   text-align: center;
-  padding: 16px;
-  font-size: 20px;
   font-weight: bold;
-  background: #a5d6c9;
-  color: #fff;
+  margin-bottom: 20px;
 }
 
-.chat-box {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
+#username-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
+#username-input {
+  padding: 10px;
+  font-size: 16px;
+  width: 80%;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#set-username-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#set-username-button:hover {
+  background-color: #45a049;
+}
+
+/* 聊天消息框样式 */
+.chat-box {
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+/* 输入框和发送按钮样式 */
 .input-area {
   display: flex;
-  padding: 10px;
-  border-top: 1px solid #ddd;
-  background: #f4fdf9;
 }
 
 #message-input {
-  flex: 1;
+  width: 90%;
   padding: 10px;
-  border-radius: 30px;
-  border: 1px solid #ccc;
-  outline: none;
   font-size: 16px;
-  transition: 0.2s;
-}
-
-#message-input:focus {
-  border-color: #69c39f;
-  box-shadow: 0 0 3px #69c39f;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 #send-button {
-  margin-left: 10px;
-  padding: 10px 18px;
-  border: none;
-  background: #69c39f;
-  color: white;
+  width: 10%;
+  padding: 10px;
   font-size: 16px;
-  border-radius: 50%;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
 #send-button:hover {
-  background: #5ab18f;
+  background-color: #45a049;
 }
 
+/* 消息气泡样式 */
 .chat-bubble {
-  max-width: 70%;
-  padding: 10px 14px;
-  margin: 6px 0;
+  display: inline-block;
+  padding: 10px;
   border-radius: 20px;
-  font-size: 16px;
-  word-break: break-word;
-  animation: popIn 0.3s ease;
+  max-width: 80%;
+  margin-bottom: 10px;
 }
 
-.sent {
-  background: linear-gradient(to right, #b2e7d6, #8dd7b5);
-  color: #000;
-  align-self: flex-end;
+.my-message {
+  background-color: #4caf50;
+  color: white;
+  margin-left: auto;
 }
 
-.received {
-  background: #e0f5ec;
-  color: #333;
-  align-self: flex-start;
+.other-message {
+  background-color: #f0f0f0;
+  color: black;
+  margin-right: auto;
 }
 
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+.my-message, .other-message {
+  text-align: left;
+  font-size: 14px;
+}
+
+.my-message {
+  background-color: #80e080;
+}
+
+.other-message {
+  background-color: #e0e0e0;
 }
