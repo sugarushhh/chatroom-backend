@@ -1,29 +1,34 @@
 const socket = io('https://chatroom-backend-0wha.onrender.com');
 
+let username = localStorage.getItem('username');
+if (!username) {
+  username = prompt("请输入你的用户名：") || "匿名";
+  localStorage.setItem('username', username);
+}
+
 const input = document.getElementById('message-input');
 const button = document.getElementById('send-button');
 const chatBox = document.getElementById('chat-box');
 
-let myId = null;
+function formatTime(timestamp) {
+  const date = new Date(timestamp);
+  return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+}
 
-// 获取自己的 socket id
-socket.on('connect', () => {
-  myId = socket.id;
-});
-
-// 发送消息
 function sendMessage() {
-  const msg = input.value.trim();
-  if (msg) {
-    socket.emit('chat message', msg); // 只发送文本内容
+  const text = input.value.trim();
+  if (text) {
+    const message = {
+      username,
+      text,
+      timestamp: Date.now()
+    };
+    socket.emit('chat message', message);
     input.value = '';
   }
 }
 
-// 点击按钮发送
 button.addEventListener('click', sendMessage);
-
-// 回车键发送
 input.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     e.preventDefault();
@@ -31,19 +36,27 @@ input.addEventListener('keydown', e => {
   }
 });
 
-// 接收消息
-socket.on('chat message', ({ id, text }) => {
-  const div = document.createElement('div');
-  div.className = 'chat-bubble';
+socket.on('chat message', message => {
+  const messageDiv = document.createElement('div');
+  const isSelf = message.username === username;
+  messageDiv.className = `chat-message ${isSelf ? 'right' : 'left'}`;
 
-  // 区分自己和他人
-  if (id === myId) {
-    div.classList.add('self'); // 自己的消息靠右
-  } else {
-    div.classList.add('other'); // 别人的消息靠左
-  }
+  const nameSpan = document.createElement('div');
+  nameSpan.className = 'username';
+  nameSpan.textContent = message.username;
 
-  div.textContent = text;
-  chatBox.appendChild(div);
+  const textSpan = document.createElement('div');
+  textSpan.className = 'text';
+  textSpan.textContent = message.text;
+
+  const timeSpan = document.createElement('div');
+  timeSpan.className = 'timestamp';
+  timeSpan.textContent = formatTime(message.timestamp);
+
+  messageDiv.appendChild(nameSpan);
+  messageDiv.appendChild(textSpan);
+  messageDiv.appendChild(timeSpan);
+
+  chatBox.appendChild(messageDiv);
   chatBox.scrollTop = chatBox.scrollHeight;
 });
