@@ -1,41 +1,57 @@
 /* 基本样式 */
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f0f0;
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* 聊天框样式 */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* 聊天容器 */
 .chat-wrapper {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: white;
+  max-width: 900px;
+  height: 600px;
+  background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
+/* 标题 */
 header {
+  background-color: #4caf50;
+  color: white;
   font-size: 24px;
+  padding: 20px;
   text-align: center;
   font-weight: bold;
-  margin-bottom: 20px;
 }
 
-#username-container {
+/* 用户名输入框样式 */
+.username-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  padding: 20px;
+  margin-bottom: 10px;
 }
 
 #username-input {
   padding: 10px;
   font-size: 16px;
-  width: 80%;
+  width: 70%;
   margin-bottom: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -55,24 +71,28 @@ header {
   background-color: #45a049;
 }
 
-/* 聊天消息框样式 */
+/* 聊天框样式 */
 .chat-box {
-  height: 400px;
+  flex: 1;
   overflow-y: auto;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  padding: 10px;
+  padding: 20px;
   background-color: #f9f9f9;
-  border-radius: 5px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 输入框和发送按钮样式 */
+/* 输入框和发送按钮 */
 .input-area {
   display: flex;
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
 }
 
 #message-input {
-  width: 90%;
+  flex: 1;
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
@@ -80,13 +100,14 @@ header {
 }
 
 #send-button {
-  width: 10%;
-  padding: 10px;
-  font-size: 16px;
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
   background-color: #4caf50;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 50%;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -96,34 +117,35 @@ header {
 
 /* 消息气泡样式 */
 .chat-bubble {
-  display: inline-block;
-  padding: 10px;
-  border-radius: 20px;
-  max-width: 80%;
+  max-width: 70%;
   margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  word-wrap: break-word;
+  display: inline-block;
+  line-height: 1.5;
 }
 
 .my-message {
   background-color: #4caf50;
   color: white;
-  margin-left: auto;
+  align-self: flex-end;
+  border-radius: 12px 12px 0 12px;
 }
 
 .other-message {
-  background-color: #f0f0f0;
+  background-color: #e1e1e1;
   color: black;
-  margin-right: auto;
+  align-self: flex-start;
+  border-radius: 12px 12px 12px 0;
 }
 
-.my-message, .other-message {
-  text-align: left;
-  font-size: 14px;
+/* 消息容器 */
+.chat-box {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.my-message {
-  background-color: #80e080;
-}
-
-.other-message {
-  background-color: #e0e0e0;
-}
