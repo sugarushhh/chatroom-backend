@@ -46,8 +46,3 @@ io.on('connection', (socket) => {
     console.log('用户已断开连接');
   });
 });
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`服务器正在运行，端口：${PORT}`);
-});
