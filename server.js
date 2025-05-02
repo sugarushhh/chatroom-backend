@@ -1,4 +1,11 @@
 const express = require('express');
+const path = require('path');
+const app = express();
+
+// 提供静态文件
+app.use(express.static(path.join(__dirname, 'public')));
+
+const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
