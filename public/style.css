@@ -1,129 +1,176 @@
-/* 基础重置与布局 */
+/* 基础设置与现代背景 */
 body {
   margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #d9fdd3, #c1e3d7);
-  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #e0f7e9, #d0eae0, #c5e1d6);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
-/* 聊天窗口容器 */
+/* 背景动画 */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 聊天容器 */
 .chat-wrapper {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  width: 95%;
-  max-width: 600px;
+  width: 90%;
+  max-width: 700px;
   height: 90vh;
-  border-radius: 15px;
+  background: #ffffffdd;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
-/* 头部 */
+/* 标题栏 */
 header {
-  padding: 15px;
-  background: #a0d6b4;
+  padding: 16px;
+  background: #6ac78f;
+  color: white;
+  font-size: 20px;
   text-align: center;
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: #2d4739;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
-/* 聊天内容区 */
+/* 聊天框 */
 .chat-box {
   flex: 1;
-  padding: 15px;
+  padding: 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* 消息气泡 */
-.chat-bubble {
+/* 单个消息容器 */
+.message-container {
+  display: flex;
+  flex-direction: column;
   max-width: 80%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  position: relative;
-  animation: popIn 0.3s ease;
-  word-break: break-word;
-  line-height: 1.4;
+  animation: popIn 0.3s ease-out;
 }
 
-.chat-bubble.left {
-  align-self: flex-start;
-  background: #e0f3eb;
-  color: #333;
-}
-
-.chat-bubble.right {
-  align-self: flex-end;
-  background: #bce5c1;
-  color: #1f2e1e;
+@keyframes popIn {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* 用户名 */
 .username {
-  font-size: 0.75rem;
-  font-weight: bold;
+  font-size: 12px;
   margin-bottom: 2px;
+  color: #666;
+  padding: 0 8px;
+}
+
+/* 聊天气泡 */
+.chat-bubble {
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  position: relative;
+  word-break: break-word;
+  line-height: 1.4;
 }
 
 /* 时间戳 */
 .timestamp {
-  font-size: 0.7rem;
-  color: #666;
-  margin-top: 4px;
+  font-size: 10px;
+  color: #999;
   text-align: right;
+  margin-top: 4px;
+  padding-right: 8px;
+}
+
+/* 自己的消息 */
+.right .chat-bubble {
+  background: #b2eec0;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+.right {
+  align-self: flex-end;
+  text-align: right;
+}
+
+/* 别人的消息 */
+.left .chat-bubble {
+  background: #e4f1ec;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
+.left {
+  align-self: flex-start;
+  text-align: left;
 }
 
 /* 输入区 */
 .input-area {
   display: flex;
-  padding: 10px;
-  background: #ffffffb6;
-  backdrop-filter: blur(5px);
-  border-top: 1px solid #ccc;
+  padding: 16px;
+  gap: 10px;
+  background: #f4f4f4;
+  border-top: 1px solid #ddd;
 }
 
+/* 输入框 */
 #message-input {
   flex: 1;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 15px;
-  font-size: 1rem;
-  margin-right: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
   outline: none;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+#message-input:focus {
+  border-color: #6ac78f;
+  box-shadow: 0 0 5px rgba(106, 199, 143, 0.3);
 }
 
+/* 发送按钮 */
 #send-button {
-  background-color: #88c9a1;
+  background: #6ac78f;
   border: none;
-  padding: 10px 16px;
   border-radius: 50%;
-  font-size: 1rem;
+  color: white;
+  font-size: 18px;
+  width: 42px;
+  height: 42px;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.3s;
+  transition: transform 0.2s, background 0.2s;
 }
-
 #send-button:hover {
-  background-color: #72b68a;
-  transform: scale(1.1);
+  background: #58b37a;
+  transform: scale(1.05);
+}
+#send-button:active {
+  transform: scale(0.95);
+  background: #48a26a;
 }
 
-/* 动效 */
-@keyframes popIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+/* 用户名输入框（可选） */
+#username-input {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 10px;
+  width: 100%;
 }

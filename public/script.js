@@ -24,7 +24,17 @@ function sendMessage() {
   }
 }
 
-// 接收并显示消息
+// 格式化时间戳
+function formatTimestamp(isoString) {
+  const date = new Date(isoString);
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hour = date.getHours().toString().padStart(2, '0');
+  const minute = date.getMinutes().toString().padStart(2, '0');
+  return `${month}-${day} ${hour}:${minute}`;
+}
+
+// 显示消息
 function displayMessage(msg) {
   const div = document.createElement('div');
   const isSelf = msg.user === username;
@@ -35,12 +45,12 @@ function displayMessage(msg) {
   userElem.textContent = msg.user;
 
   const textElem = document.createElement('div');
+  textElem.className = 'message-text';
   textElem.textContent = msg.text;
 
   const timeElem = document.createElement('div');
   timeElem.className = 'timestamp';
-  const time = new Date(msg.timestamp);
-  timeElem.textContent = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+  timeElem.textContent = formatTimestamp(msg.timestamp);
 
   div.appendChild(userElem);
   div.appendChild(textElem);
@@ -59,13 +69,11 @@ input.addEventListener('keydown', e => {
   }
 });
 
-// 接收历史消息
 socket.on('chat history', messages => {
   chatBox.innerHTML = '';
   messages.forEach(displayMessage);
 });
 
-// 接收实时消息
 socket.on('chat message', msg => {
   displayMessage(msg);
 });
