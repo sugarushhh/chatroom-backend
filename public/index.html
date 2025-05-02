@@ -16,41 +16,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
-  <script>
-    const socket = io('https://chatroom-backend-0wha.onrender.com');
-    const input = document.getElementById('message-input');
-    const button = document.getElementById('send-button');
-    const chatBox = document.getElementById('chat-box');
-
-    // 发送消息函数
-    function sendMessage() {
-      const msg = input.value.trim();
-      if (msg) {
-        socket.emit('chat message', msg);  // 向后端发送消息
-        input.value = '';  // 清空输入框
-      }
-    }
-
-    // 点击发送按钮
-    button.addEventListener('click', sendMessage);
-
-    // 支持回车键发送消息
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    // 接收消息并更新界面
-    socket.on('chat message', msg => {
-      const div = document.createElement('div');
-      div.className = 'chat-bubble';
-      div.textContent = msg;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;  // 滚动到最新消息
-    });
-  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

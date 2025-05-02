@@ -1,26 +1,36 @@
-// 连接到服务器
 const socket = io();
+const input = document.getElementById('message-input');
+const button = document.getElementById('send-button');
+const chatBox = document.getElementById('chat-box');
 
-// 发送消息的按钮点击事件
-document.getElementById('sendMessage').addEventListener('click', () => {
-  const message = document.getElementById('messageInput').value;
-  if (message.trim()) {
-    socket.emit('chat message', message);  // 发送消息到后端
-    document.getElementById('messageInput').value = '';  // 清空输入框
+// 发送消息
+function sendMessage() {
+  const msg = input.value.trim();
+  if (msg) {
+    socket.emit('chat message', msg);
+    appendMessage({ text: msg, self: true }); // 立刻在本地添加
+    input.value = '';
   }
-});
+}
 
-// 监听回车键事件发送消息
-document.getElementById('messageInput').addEventListener('keydown', (e) => {
+button.addEventListener('click', sendMessage);
+input.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
-    document.getElementById('sendMessage').click();  // 触发点击事件，发送消息
+    e.preventDefault();
+    sendMessage();
   }
 });
 
-// 接收消息并更新 UI
+// 接收别人发的消息
 socket.on('chat message', (msg) => {
-  const messageList = document.getElementById('messages');
-  const messageItem = document.createElement('li');
-  messageItem.textContent = msg;
-  messageList.appendChild(messageItem);
+  appendMessage({ text: msg, self: false });
 });
+
+// 渲染消息
+function appendMessage({ text, self }) {
+  const div = document.createElement('div');
+  div.className = 'chat-bubble ' + (self ? 'self' : 'other');
+  div.textContent = text;
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
