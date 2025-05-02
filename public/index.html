@@ -16,7 +16,43 @@
     </div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script>
+    const socket = io('https://chatroom-backend-0wha.onrender.com');
+    const input = document.getElementById('message-input');
+    const button = document.getElementById('send-button');
+    const chatBox = document.getElementById('chat-box');
+
+    function sendMessage() {
+      const msg = input.value.trim();
+      if (msg) {
+        socket.emit('chat message', msg);
+        input.value = '';
+      }
+    }
+
+    button.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    socket.on('chat message', (msg) => {
+      const div = document.createElement('div');
+      div.className = 'chat-bubble';
+
+      if (msg.id === socket.id) {
+        div.classList.add('sent');
+      } else {
+        div.classList.add('received');
+      }
+
+      div.textContent = msg.text;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  </script>
 </body>
 </html>

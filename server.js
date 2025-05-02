@@ -30,12 +30,11 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log('用户已连接');
 
-  // 监听聊天消息并广播给所有用户
+  // 监听聊天消息并广播给所有用户，附带发送者 id
   socket.on('chat message', (msg) => {
-    io.emit('chat message', msg); // 发送消息给所有连接的用户
+    io.emit('chat message', { id: socket.id, text: msg });
   });
 
-  // 用户断开连接时的处理
   socket.on('disconnect', () => {
     console.log('用户已断开连接');
   });
