@@ -150,3 +150,94 @@ header {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .username-setup {
+    padding: 20px 15px;
+  }
+
+  .chat-wrapper {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    padding: 10px;
+  }
+
+  header {
+    font-size: 18px;
+    padding: 12px;
+  }
+
+  .chat-box {
+    padding: 10px;
+  }
+
+  #message-input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  #send-button {
+    padding: 0 12px;
+    font-size: 18px;
+  }
+
+  .chat-message {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .username {
+    font-size: 13px;
+  }
+
+  .timestamp {
+    font-size: 11px;
+  }
+}
+
+/* 超小屏幕适配（例如手机） */
+@media (max-width: 480px) {
+  .username-setup {
+    padding: 15px 10px;
+  }
+
+  .chat-wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+  }
+
+  header {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .chat-box {
+    padding: 8px;
+  }
+
+  #message-input {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  #send-button {
+    padding: 0 10px;
+    font-size: 16px;
+  }
+
+  .chat-message {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .username {
+    font-size: 12px;
+  }
+
+  .timestamp {
+    font-size: 10px;
+  }
+}
