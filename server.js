@@ -2,72 +2,71 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io');
-const cors = require('cors');
 const fs = require('fs');
+const cors = require('cors');
 
 // 创建 Express 应用
 const app = express();
-
-// 提供 public 目录中的静态文件
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 创建 HTTP 服务器并与 Socket.IO 配置连接
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: '*',
-  },
+  cors: { origin: '*' }
 });
 
-// 允许跨域请求
-app.use(cors());
+// 消息缓存文件
+const MESSAGE_FILE = path.join(__dirname, 'messages.json');
 
-// 处理根路径请求（返回静态文件）
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// 加载历史消息
-function loadMessages() {
+// 读取已有消息（如果存在）
+let messages = [];
+if (fs.existsSync(MESSAGE_FILE)) {
   try {
-    const data = fs.readFileSync(path.join(__dirname, 'messages.json'), 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
+    const raw = fs.readFileSync(MESSAGE_FILE, 'utf8');
+    messages = JSON.parse(raw);
+  } catch (err) {
+    console.error('读取消息失败:', err);
+    messages = [];
   }
 }
 
-// 保存消息
-function saveMessage(msg) {
-  const messages = loadMessages();
-  messages.push(msg);
-  fs.writeFileSync(path.join(__dirname, 'messages.json'), JSON.stringify(messages, null, 2));
+// 保存消息到文件
+function saveMessages() {
+  fs.writeFile(MESSAGE_FILE, JSON.stringify(messages, null, 2), err => {
+    if (err) console.error('保存消息失败:', err);
+  });
 }
 
-// 监听 socket.io 连接
+// 发送 index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+// socket.io 逻辑
 io.on('connection', (socket) => {
   console.log('用户已连接');
 
-  // 发送历史消息给新连接的用户
-  socket.emit('load messages', loadMessages());
+  // 发送历史消息
+  socket.emit('load history', messages);
 
-  // 监听聊天消息并广播给所有用户
+  // 接收消息
   socket.on('chat message', (msg) => {
-    const timestamp = new Date().toLocaleString(); // 获取当前时间戳
-    const messageWithTime = { username: msg.username, content: msg.content, timestamp };
-    saveMessage(messageWithTime); // 保存消息到文件
-
-    io.emit('chat message', messageWithTime); // 发送消息给所有连接的用户
+    if (msg.text && msg.user && msg.time) {
+      msg.time = new Date(msg.time).toISOString(); // 确保时间格式是ISO格式
+      messages.push(msg);
+      if (messages.length > 500) messages.shift(); // 最多保留500条
+      saveMessages();
+      io.emit('chat message', msg);
+    }
   });
 
-  // 用户断开连接时的处理
   socket.on('disconnect', () => {
-    console.log('用户已断开连接');
+    console.log('用户断开连接');
   });
 });
 
-// 启动服务器，监听端口
+// 启动服务器
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`服务器正在监听端口 ${PORT}`);
 });
