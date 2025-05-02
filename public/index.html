@@ -9,6 +9,10 @@
 <body>
   <div class="chat-wrapper">
     <header>我们的秘密小窝</header>
+    <div id="username-container">
+      <input type="text" id="username-input" placeholder="请输入用户名" />
+      <button id="set-username-button">确定</button>
+    </div>
     <div class="chat-box" id="chat-box"></div>
     <div class="input-area">
       <input type="text" id="message-input" placeholder="我们终将重逢..." />
@@ -22,12 +26,31 @@
     const input = document.getElementById('message-input');
     const button = document.getElementById('send-button');
     const chatBox = document.getElementById('chat-box');
+    const usernameInput = document.getElementById('username-input');
+    const setUsernameButton = document.getElementById('set-username-button');
+    const usernameContainer = document.getElementById('username-container');
+    
+    let username = localStorage.getItem('username');
+    if (username) {
+      usernameContainer.style.display = 'none';
+      socket.emit('set username', { username });  // 告诉后端用户名
+    }
+
+    // 设置用户名
+    setUsernameButton.addEventListener('click', () => {
+      username = usernameInput.value.trim();
+      if (username) {
+        localStorage.setItem('username', username);
+        usernameContainer.style.display = 'none';
+        socket.emit('set username', { username });  // 发送用户名到后端
+      }
+    });
 
     // 发送消息函数
     function sendMessage() {
       const msg = input.value.trim();
-      if (msg) {
-        socket.emit('chat message', msg);  // 向后端发送消息
+      if (msg && username) {
+        socket.emit('chat message', { msg, username });  // 发送消息和用户名
         input.value = '';  // 清空输入框
       }
     }
@@ -44,20 +67,36 @@
     });
 
     // 接收消息并更新界面
-    socket.on('chat message', msg => {
+    socket.on('chat message', (data) => {
       const div = document.createElement('div');
       div.className = 'chat-bubble';
-      div.textContent = msg;
+
+      // 判断是否是自己发的消息
+      if (data.username === username) {
+        div.classList.add('my-message');  // 如果是自己发的，添加样式
+      } else {
+        div.classList.add('other-message');  // 如果是其他人发的，添加样式
+      }
+
+      div.textContent = `${data.username}: ${data.msg}`;
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;  // 滚动到最新消息
     });
 
     // 接收历史消息并显示
     socket.on('chat history', (history) => {
-      history.forEach((msg) => {
+      history.forEach((message) => {
         const div = document.createElement('div');
         div.className = 'chat-bubble';
-        div.textContent = msg;
+        
+        // 根据用户名显示左右消息
+        if (message.username === username) {
+          div.classList.add('my-message');
+        } else {
+          div.classList.add('other-message');
+        }
+
+        div.textContent = `${message.username}: ${message.msg}`;
         chatBox.appendChild(div);
       });
       chatBox.scrollTop = chatBox.scrollHeight;  // 滚动到最底部
